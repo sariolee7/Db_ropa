@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base de Datos - Login</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Serif+Georgian:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div class="background-container">
+    <div id="mainContainer">
+      <!-- Formulario -->
+      <div class="login-container space1">
+        <h1>Base de Datos</h1>
+
+        <h3>Conectado a Firestore</h3>
+        <button id="loadDataBtn">Mostrar prendas</button>
+
+        <div class="input-container space">
+          <h4>Garment ID:</h4>
+          <input type="text" id="docId" placeholder="e.g., garment1" />
+        </div>
+        <div class="input-container">
+          <h4>Name:</h4>
+          <input type="text" id="name" placeholder="e.g., Black T-Shirt" />
+        </div>
+        <div class="input-container">
+          <h4>Price:</h4>
+          <input type="text" id="price" placeholder="e.g., 100" />
+        </div>
+        <div class="input-container">
+          <h4>Size:</h4>
+          <input type="text" id="size" placeholder="e.g., M" />
+        </div>
+        <div class="input-container">
+          <h4>Category:</h4>
+          <input type="text" id="category" placeholder="e.g., T-Shirt" />
+        </div>
+        <button id="addDocBtn">Add Clothing Item</button>
+
+        <h3>Buscar prenda</h3>
+        <div class="input-container">
+          <h4>Garment ID:</h4>
+          <input type="text" id="getDocId" placeholder="e.g., garment1" />
+        </div>
+        <button id="getDocBtn">Get Clothing Item</button>
+      </div>
+
+      <!-- Lista de prendas -->
+      <div id="clothingList" class="login-container space1"
+        style="display: none; flex: 1; max-height: 80vh; overflow-y: auto;">
+        <h3>Listado de Prendas</h3>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { FirestoreService } from './modules/firestore_service.js';
+
+    const ropaService = new FirestoreService("ropa");
+    const clothingList = document.getElementById("clothingList");
+    const mainContainer = document.getElementById("mainContainer");
+
+    let clothingListVisible = false;
+    let wasGetDocBtnClicked = false;
+
+    document.getElementById("loadDataBtn").addEventListener("click", async () => {
+      if (clothingListVisible) {
+        clothingList.style.display = "none";
+        mainContainer.style.justifyContent = "center";
+        clothingListVisible = false;
+        wasGetDocBtnClicked = false;
+        return;
+      }
+
+      clothingList.style.display = "block";
+      mainContainer.style.justifyContent = "space-between";
+      clothingListVisible = true;
+      wasGetDocBtnClicked = false;
+
+      clothingList.innerHTML = "<h3>Listado de Prendas</h3>";
+
+      try {
+        const prendas = await ropaService.getAllDocuments();
+
+        prendas.forEach(doc => {
+          const item = document.createElement("div");
+          item.style.border = "3px solid #79557d";
+          item.style.padding = "15px";
+          item.style.margin = "10px 0";
+          item.style.borderRadius = "5px";
+          item.style.backgroundColor = "#fff";
+
+          item.innerHTML = `
+            <h3>${doc.name}</h3>
+            <p><strong>Id:</strong> ${doc.id || 'No id'}</p>
+            <p><strong>Price:</strong> ${doc.price || 'No price'}</p>
+            <p><strong>Category:</strong> ${doc.category || 'No category'}</p>
+            <p><strong>Size:</strong> ${doc.size || 'No size'}</p>
+          `;
+
+          clothingList.appendChild(item);
+        });
+
+      } catch (error) {
+        console.error("Error obteniendo prendas:", error);
+      }
+    });
+
+    document.getElementById("addDocBtn").addEventListener("click", async () => {
+      const docId = document.getElementById("docId").value.trim();
+      const name = document.getElementById("name").value.trim();
+      const priceValue = document.getElementById("price").value;
+      const category = document.getElementById("category").value.trim();
+      const size = document.getElementById("size").value.trim();
+
+      if (!docId || !name || !priceValue || !category || !size) {
+        alert("Please fill in all fields");
+        return;
+      }
+
+      const price = parseInt(priceValue);
+      const data = { id: docId, category, size, price: isNaN(price) ? 0 : price, name };
+
+      try {
+        await ropaService.PostDocument(docId, data);
+        alert("Prenda agregada correctamente");
+      } catch (error) {
+        console.error("Error adding clothing item:", error);
+      }
+    });
+
+    document.getElementById("getDocBtn").addEventListener("click", async () => {
+      const docId = document.getElementById("getDocId").value.trim();
+      if (!docId) {
+        alert("Garment ID is required");
+        return;
+      }
+
+      if (clothingListVisible && wasGetDocBtnClicked) {
+        clothingList.style.display = "none";
+        mainContainer.style.justifyContent = "center";
+        clothingListVisible = false;
+        wasGetDocBtnClicked = false;
+        return;
+      }
+
+      try {
+        const item = await ropaService.getDocumentById(docId);
+        if (item) {
+          clothingList.style.display = "block";
+          mainContainer.style.justifyContent = "space-between";
+          clothingListVisible = true;
+          wasGetDocBtnClicked = true;
+
+          clothingList.innerHTML = `
+            <h3>Listado de Prendas</h3>
+            <div style="border: 3px solid #79557d; padding: 15px; margin: 10px 0; border-radius: 5px; background-color: #fff;">
+              <h3>${item.name}</h3>
+              <p><strong>Id:</strong> ${item.id || 'No id'}</p>
+              <p><strong>Price:</strong> ${item.price || 'No price'}</p>
+              <p><strong>Category:</strong> ${item.category || 'No category'}</p>
+              <p><strong>Size:</strong> ${item.size || 'No size'}</p>
+            </div>
+          `;
+        } else {
+          alert("Item not found");
+        }
+      } catch (error) {
+        console.error("Error fetching item:", error);
+      }
+    });
+  </script>
+</body>
+
+</html>
