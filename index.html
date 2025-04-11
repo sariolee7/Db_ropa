@@ -22,7 +22,7 @@
         <div class="login-container space1">
           <h1>Data base</h1>
 
-          <h3 class="subtitulos" >Conectado a Firestore</h3>
+          <h3 class="subtitulos">Conectado a Firestore</h3>
           <button id="loadDataBtn">Mostrar prendas</button>
 
           <div class="input-container space">
@@ -62,7 +62,7 @@
         </div>
       </div>
     </div>
-    
+
   </div>
 
   <script type="module">
@@ -96,18 +96,15 @@
 
         prendas.forEach(doc => {
           const item = document.createElement("div");
-          item.style.border = "3px solid #79557d";
-          item.style.padding = "15px";
-          item.style.margin = "5px 0";
-          item.style.borderRadius = "5px";
-          item.style.backgroundColor = "#fff";
 
           item.innerHTML = `
+          <div class="garment-box">
             <h3>${doc.name}</h3>
             <p><strong>Id:</strong> ${doc.id || 'No id'}</p>
             <p><strong>Price:</strong> ${doc.price || 'No price'}</p>
             <p><strong>Category:</strong> ${doc.category || 'No category'}</p>
             <p><strong>Size:</strong> ${doc.size || 'No size'}</p>
+          </div>
           `;
 
           clothingList.appendChild(item);
@@ -165,14 +162,14 @@
           wasGetDocBtnClicked = true;
 
           clothingList.innerHTML = `
-            <h3 class="subtitulos">Garments selected</h3>
-            <div style="border: 3px solid #79557d; padding: 15px; margin: 5px 0; border-radius: 5px; background-color: #fff;">
-              <h3>${item.name}</h3>
-              <p><strong>Id:</strong> ${item.id || 'No id'}</p>
-              <p><strong>Price:</strong> ${item.price || 'No price'}</p>
-              <p><strong>Category:</strong> ${item.category || 'No category'}</p>
-              <p><strong>Size:</strong> ${item.size || 'No size'}</p>
-            </div>
+          <h3 class="subtitulos">Garments selected</h3>
+          <div class="garment-box"">
+            <h3>${item.name}</h3>
+            <p><strong>Id:</strong> ${item.id || 'No id'}</p>
+            <p><strong>Price:</strong> ${item.price || 'No price'}</p>
+            <p><strong>Category:</strong> ${item.category || 'No category'}</p>
+            <p><strong>Size:</strong> ${item.size || 'No size'}</p>
+          </div>
           `;
         } else {
           alert("Item not found");
