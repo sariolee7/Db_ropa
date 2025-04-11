@@ -15,48 +15,52 @@
 </head>
 
 <body>
-  <div class="background-container">
-    <div id="mainContainer">
-      <!-- Formulario -->
-      <div class="container">
+  <div class="background-container space space1" id="mainContainer">
+    <div class="container">
         <div class="login-container space1">
-          <h1>Data base</h1>
 
+        <div>
+
+          <h1>Data base</h1>
           <!-- Botón adicional para ir a otra página -->
           <button onclick="window.location.href='queries.html'">Ir a otra página</button>
-
           <h3 class="subtitulos">Conectado a Firestore</h3>
           <button id="loadDataBtn">Mostrar prendas</button>
 
-          <div class="input-container space">
-            <h4>Garment ID:</h4>
+          <div class="input-container">
+            <label for="orderColumn"><h4>Garment ID:</h4></label>
             <input type="text" id="docId" placeholder="e.g., garment1" />
           </div>
+
           <div class="input-container">
-            <h4>Name:</h4>
+            <label for="orderColumn"><h4>Name:</h4></label>
             <input type="text" id="name" placeholder="e.g., Black T-Shirt" />
           </div>
+
           <div class="input-container">
-            <h4>Price:</h4>
+            <label for="orderColumn"><h4>Price:</h4></label>
             <input type="text" id="price" placeholder="e.g., 100" />
           </div>
+
           <div class="input-container">
-            <h4>Size:</h4>
+            <label for="orderColumn"><h4>Size:</h4></label>
             <input type="text" id="size" placeholder="e.g., M" />
           </div>
+
           <div class="input-container">
-            <h4>Category:</h4>
+            <label for="orderColumn"><h4>Category:</h4></label>
             <input type="text" id="category" placeholder="e.g., T-Shirt" />
           </div>
+
           <button id="addDocBtn">Add Clothing Item</button>
 
           <h3 class="subtitulos">Serch for iteam</h3>
           <div class="input-container">
-            <h4>Garment ID:</h4>
+            <label for="orderColumn"><h4>Garment ID:</h4></label>
             <input type="text" id="getDocId" placeholder="e.g., garment1" />
           </div>
+
           <button id="getDocBtn">Get Clothing Item</button>
-        </div>
 
         <!-- Lista de prendas -->
         <div id="clothingList" class="login-container space1"
@@ -64,10 +68,11 @@
           <h3 class="subtitulos">List of Garments</h3>
         </div>
       </div>
+      </div>
+     </div>
     </div>
 
-  </div>
-
+<!-------------------------------------------------------------------------------------------->
   <script type="module">
     import { FirestoreService } from './modules/firestore_service.js';
 
@@ -78,68 +83,55 @@
     let clothingListVisible = false;
     let wasGetDocBtnClicked = false;
 
-    document.getElementById("loadDataBtn").addEventListener("click", async () => {
-      if (clothingListVisible) {
-        clothingList.style.display = "none";
-        mainContainer.style.justifyContent = "center";
-        clothingListVisible = false;
-        wasGetDocBtnClicked = false;
-        return;
-      }
+    const renderGarments = (docs) => {
+  const container = document.getElementById("clothingList");
+  container.innerHTML = ""; // Limpiar resultados anteriores
 
-      clothingList.style.display = "block";
-      mainContainer.style.justifyContent = "space-between";
-      clothingListVisible = true;
-      wasGetDocBtnClicked = false;
+  if (!docs || !Array.isArray(docs) || docs.length === 0) {
+    container.innerHTML = "<p style='text-align: center;'>No se encontraron prendas con esos filtros.</p>";
+    return;
+  }
 
-      clothingList.innerHTML = "<h3 class='subtitulos'>List of Garments</h3>";
+  container.style.display = "flex";
+  container.style.flexWrap = "wrap";
+  container.style.justifyContent = "center";
+  container.style.gap = "1.5rem";
+  container.style.marginTop = "2rem";
 
-      try {
-        const prendas = await ropaService.getAllDocuments();
+  docs.forEach((doc, index) => {
+    const {
+      id = "Sin ID",
+      name = "Nombre desconocido",
+      price = "Precio no disponible",
+      category = "Sin categoría",
+      size = "Talla desconocida"
+    } = doc;
 
-        prendas.forEach(doc => {
-          const item = document.createElement("div");
+    const item = document.createElement("div");
 
-          item.innerHTML = `
-          <div class="garment-box">
-            <h3>${doc.name}</h3>
-            <p><strong>Id:</strong> ${doc.id || 'No id'}</p>
-            <p><strong>Price:</strong> ${doc.price || 'No price'}</p>
-            <p><strong>Category:</strong> ${doc.category || 'No category'}</p>
-            <p><strong>Size:</strong> ${doc.size || 'No size'}</p>
-          </div>
-          `;
+    item.innerHTML = `
+      <div class="garment-box" style="
+        padding: 1.2rem;
+        width: 220px;
+        border-radius: 12px;
+        background-color: #fff;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: fadeInUp 0.4s ease ${index * 100}ms forwards;
+        opacity: 0;
+      ">
+        <h3 style="margin-bottom: 0.5rem;">${name}</h3>
+        <p><strong>ID:</strong> ${id}</p>
+        <p><strong>Precio:</strong> $${price}</p>
+        <p><strong>Categoría:</strong> ${category}</p>
+        <p><strong>Talla:</strong> ${size}</p>
+      </div>
+    `;
 
-          clothingList.appendChild(item);
-        });
+    container.appendChild(item);
+  });
+};
 
-      } catch (error) {
-        console.error("Error obteniendo prendas:", error);
-      }
-    });
-
-    document.getElementById("addDocBtn").addEventListener("click", async () => {
-      const docId = document.getElementById("docId").value.trim();
-      const name = document.getElementById("name").value.trim();
-      const priceValue = document.getElementById("price").value;
-      const category = document.getElementById("category").value.trim();
-      const size = document.getElementById("size").value.trim();
-
-      if (!docId || !name || !priceValue || !category || !size) {
-        alert("Please fill in all fields");
-        return;
-      }
-
-      const price = parseInt(priceValue);
-      const data = { id: docId, category, size, price: isNaN(price) ? 0 : price, name };
-
-      try {
-        await ropaService.PostDocument(docId, data);
-        alert("Prenda agregada correctamente");
-      } catch (error) {
-        console.error("Error adding clothing item:", error);
-      }
-    });
 
     document.getElementById("getDocBtn").addEventListener("click", async () => {
       const docId = document.getElementById("getDocId").value.trim();

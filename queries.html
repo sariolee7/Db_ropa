@@ -1,153 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Firebase Web</title>
+  <meta charset="UTF-8" />
+  <title>Firebase Web</title>
 
-    <link rel="stylesheet" href="/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Serif+Georgian:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Serif+Georgian:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
 </head>
 
 <body>
-    <div class="background-container">
-        <div class="container">
-            <div class="login-container space1">
+  <div class="background-container space space1">
+    <div class="container">
+      <div class="login-container space1">
+        <div style="flex: 1;">
+          <h1 class="subtitulos">Firestore Query Tester</h1>
+          <button onclick="window.location.href='index.html'">Ir a otra página</button>
 
-            <h1>Firestore Query Tester</h1>
-
-            <button onclick="window.location.href='index.html'">Ir a otra página</button>
-
-            <div>
-                <h2>Where Queries (Multiple)</h2>
-                <div id="filtersContainer">
-                    <div class="filter">
-                        <input type="text" placeholder="Column" class="filterColumn">
-                        <input type="text" placeholder="Comparator (==, >, <, etc)" class="filterComparator">
-                        <input type="text" placeholder="Value" class="filterValue">
-                    </div>
-                </div>
-                <button id="addFilterBtn">Add Filter</button><br><br>
-                <button id="multiWhereQueryBtn">Run Combined Query</button>
-            </div>
-            <hr>
-
-            <div>
-                <h2>Order + Limit</h2>
-                <label for="orderColumn">Order by:</label>
-                <input type="text" id="orderColumn" placeholder="price"><br><br>
-
-                <label for="orderDir">Direction:</label>
-                <select id="orderDir">
-                    <option value="asc">Asc</option>
-                    <option value="desc">Desc</option>
-                </select><br><br>
-
-                <label for="limitNum">Limit:</label>
-                <input type="number" id="limitNum" value="5"><br><br>
-
-                <button id="orderLimitQueryBtn">Run Order + Limit Query</button>
-            </div>
-
-            <hr>
-
-            <div>
-                <h2>Prefix Search</h2>
-                <label for="prefixColumn">Column:</label>
-                <input type="text" id="prefixColumn" placeholder="name"><br><br>
-
-                <label for="prefixValue">Starts with:</label>
-                <input type="text" id="prefixValue" placeholder="Sam"><br><br>
-
-                <button id="prefixQueryBtn">Run Prefix Search</button>
-            </div>
-
-            <hr>
-
-            <div>
-                <h2>Results</h2>
-                <pre id="results"></pre>
-            </div>
-        </div>
-    </div>
-    </div>
-
-    <script type="module">
-        import { FirestoreQuery } from './modules/firestore_query.js';
-
-        const firestore = new FirestoreQuery("ropa");
-
-        const displayResults = (docs) => {
-            const resultsEl = document.getElementById("results");
-            if (!docs || docs.length === 0) {
-                resultsEl.textContent = "No documents found.";
-                return;
-            }
-
-            resultsEl.textContent = JSON.stringify(docs, null, 2);
-        };
-
-        // Add fields to filter
-        document.getElementById("addFilterBtn").addEventListener("click", () => {
-            console.log("Add field clicked")
-            const container = document.getElementById("filtersContainer");
-            const div = document.createElement("div");
-            div.classList.add("filter");
-
-            div.innerHTML = `
+          <div class="containerG">
+            <h2 class="subtitulos">Where Queries (Multiple)</h2>
+            <div id="filtersContainer">
+              <div class="filter">
                 <input type="text" placeholder="Column" class="filterColumn">
                 <input type="text" placeholder="Comparator (==, >, <, etc)" class="filterComparator">
                 <input type="text" placeholder="Value" class="filterValue">
-                `;
+              </div>
+            </div>
+            <button id="addFilterBtn">Add Filter</button><br><br>
+            <button id="multiWhereQueryBtn">Run Combined Query</button>
+          </div>
 
-            container.appendChild(div);
-        });
+          <h2 class="subtitulos">Order + Limit</h2>
+          <div class="input-container">
+            <label for="orderColumn"><h4>Order by:</h4></label>
+            <input type="text" id="orderColumn" placeholder="price"><br><br>
+          </div>
 
-        // Multi query
-        document.getElementById("multiWhereQueryBtn").addEventListener("click", async () => {
-            const filterDivs = document.querySelectorAll("#filtersContainer .filter");
-            const filters = [];
+          <div class="input-container">
+            <label for="orderDir"><h4>Direction:</h4></label>
+            <select id="orderDir" style="flex-grow: 1;padding: 10px; border: 1px solid #ccc; border-radius: 5px">
+              <option value="asc">Asc</option>
+              <option value="desc">Desc</option>
+            </select>
+          </div>
 
-            filterDivs.forEach(div => {
+          <div class="input-container">
+            <label for="limitNum"><h4>Limit:</h4></label>
+            <input type="number" id="limitNum" value="5"><br><br>
+          </div>
+          <button id="orderLimitQueryBtn">Run Order + Limit Query</button>
 
-                const column = div.querySelector(".filterColumn").value.trim();
-                const comparison = div.querySelector(".filterComparator").value.trim();
-                const valueRaw = div.querySelector(".filterValue").value.trim();
-                console.log(column, comparison, valueRaw);
+          <h2 class="subtitulos">Prefix Search</h2>
+          <div class="input-container">
+            <label for="prefixColumn"><h4>Column:</h4></label>
+            <input type="text" id="prefixColumn" placeholder="name"><br><br>
+          </div>
+          <div class="input-container">
+            <label for="prefixValue"><h4>Starts with:</h4></label>
+            <input type="text" id="prefixValue" placeholder="Sam"><br><br>
+          </div>
+          <button id="prefixQueryBtn">Run Prefix Search</button>
 
-                if (column && comparison) {
-                    const value = isNaN(valueRaw) ? valueRaw : Number(valueRaw);
-                    filters.push({ column, comparison, value });
-                }
-            });
+          <div>
+            <h2 class="subtitulos">Results</h2>
+            <div id="clothingList"
+              style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            const docs = await firestore.combinedQuery(filters);
-            displayResults(docs);
-        });
+  <!-- JS Módulo -->
+  <script type="module">
+    import { FirestoreQuery } from './modules/firestore_query.js';
 
-        // Order + Limit Query
-        document.getElementById("orderLimitQueryBtn").addEventListener("click", async () => {
-            const column = document.getElementById("orderColumn").value.trim();
-            const direction = document.getElementById("orderDir").value;
-            const limitNum = parseInt(document.getElementById("limitNum").value, 10);
+    const firestore = new FirestoreQuery("ropa");
 
-            const docs = await firestore.combinedQuery([], { column, direction }, limitNum);
-            displayResults(docs);
-        });
+    // Mostrar resultados visuales
+    const renderGarments = (docs) => {
+      const container = document.getElementById("clothingList");
+      container.innerHTML = ""; // limpiar resultados anteriores
 
-        // Prefix Search
-        document.getElementById("prefixQueryBtn").addEventListener("click", async () => {
-            const column = document.getElementById("prefixColumn").value.trim();
-            const prefix = document.getElementById("prefixValue").value.trim();
+      if (!docs || docs.length === 0) {
+        container.innerHTML = "<p>No se encontraron prendas con esos filtros.</p>";
+        return;
+      }
 
-            const docs = await firestore.prefixSearch(column, prefix);
-            displayResults(docs);
-        });
-    </script>
+      docs.forEach(doc => {
+        const item = document.createElement("div");
+        item.innerHTML = `
+          <div class="garment-box" style="
+            padding: 1rem;
+            width: 200px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          ">
+            <h4>${doc.name}</h4>
+            <p><strong>Id:</strong> ${doc.id || 'No id'}</p>
+            <p><strong>Price:</strong> ${doc.price || 'No price'}</p>
+            <p><strong>Category:</strong> ${doc.category || 'No category'}</p>
+            <p><strong>Size:</strong> ${doc.size || 'No size'}</p>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    };
+
+    // Agregar filtros dinámicamente
+    document.getElementById("addFilterBtn").addEventListener("click", () => {
+      const container = document.getElementById("filtersContainer");
+      const div = document.createElement("div");
+      div.classList.add("filter");
+
+      div.innerHTML = `
+        <input type="text" placeholder="Column" class="filterColumn">
+        <input type="text" placeholder="Comparator (==, >, <, etc)" class="filterComparator">
+        <input type="text" placeholder="Value" class="filterValue">
+      `;
+      container.appendChild(div);
+    });
+
+    // Consulta múltiple con filtros
+    document.getElementById("multiWhereQueryBtn").addEventListener("click", async () => {
+      const filterDivs = document.querySelectorAll("#filtersContainer .filter");
+      const filters = [];
+
+      filterDivs.forEach(div => {
+        const column = div.querySelector(".filterColumn").value.trim();
+        const comparison = div.querySelector(".filterComparator").value.trim();
+        const valueRaw = div.querySelector(".filterValue").value.trim();
+
+        if (column && comparison) {
+          const value = isNaN(valueRaw) ? valueRaw : Number(valueRaw);
+          filters.push({ column, comparison, value });
+        }
+      });
+
+      try {
+        const docs = await firestore.combinedQuery(filters);
+        renderGarments(docs);
+      } catch (error) {
+        console.error("Error ejecutando la consulta múltiple:", error);
+        alert("Hubo un error con la búsqueda.");
+      }
+    });
+
+    // Ordenar + Limitar
+    document.getElementById("orderLimitQueryBtn").addEventListener("click", async () => {
+      const column = document.getElementById("orderColumn").value.trim();
+      const direction = document.getElementById("orderDir").value;
+      const limitNum = parseInt(document.getElementById("limitNum").value, 10);
+
+      const docs = await firestore.combinedQuery([], { column, direction }, limitNum);
+      renderGarments(docs);
+    });
+
+    // Búsqueda por prefijo
+    document.getElementById("prefixQueryBtn").addEventListener("click", async () => {
+      const column = document.getElementById("prefixColumn").value.trim();
+      const prefix = document.getElementById("prefixValue").value.trim();
+
+      const docs = await firestore.prefixSearch(column, prefix);
+      renderGarments(docs);
+    });
+  </script>
 </body>
-
 </html>
