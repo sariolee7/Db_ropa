@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Base de Datos - Login</title>
+
   <link rel="stylesheet" href="/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,48 +18,51 @@
   <div class="background-container">
     <div id="mainContainer">
       <!-- Formulario -->
-      <div class="login-container space1">
-        <h1>Base de Datos</h1>
+      <div class="container">
+        <div class="login-container space1">
+          <h1>Data base</h1>
 
-        <h3>Conectado a Firestore</h3>
-        <button id="loadDataBtn">Mostrar prendas</button>
+          <h3 class="subtitulos" >Conectado a Firestore</h3>
+          <button id="loadDataBtn">Mostrar prendas</button>
 
-        <div class="input-container space">
-          <h4>Garment ID:</h4>
-          <input type="text" id="docId" placeholder="e.g., garment1" />
-        </div>
-        <div class="input-container">
-          <h4>Name:</h4>
-          <input type="text" id="name" placeholder="e.g., Black T-Shirt" />
-        </div>
-        <div class="input-container">
-          <h4>Price:</h4>
-          <input type="text" id="price" placeholder="e.g., 100" />
-        </div>
-        <div class="input-container">
-          <h4>Size:</h4>
-          <input type="text" id="size" placeholder="e.g., M" />
-        </div>
-        <div class="input-container">
-          <h4>Category:</h4>
-          <input type="text" id="category" placeholder="e.g., T-Shirt" />
-        </div>
-        <button id="addDocBtn">Add Clothing Item</button>
+          <div class="input-container space">
+            <h4>Garment ID:</h4>
+            <input type="text" id="docId" placeholder="e.g., garment1" />
+          </div>
+          <div class="input-container">
+            <h4>Name:</h4>
+            <input type="text" id="name" placeholder="e.g., Black T-Shirt" />
+          </div>
+          <div class="input-container">
+            <h4>Price:</h4>
+            <input type="text" id="price" placeholder="e.g., 100" />
+          </div>
+          <div class="input-container">
+            <h4>Size:</h4>
+            <input type="text" id="size" placeholder="e.g., M" />
+          </div>
+          <div class="input-container">
+            <h4>Category:</h4>
+            <input type="text" id="category" placeholder="e.g., T-Shirt" />
+          </div>
+          <button id="addDocBtn">Add Clothing Item</button>
 
-        <h3>Buscar prenda</h3>
-        <div class="input-container">
-          <h4>Garment ID:</h4>
-          <input type="text" id="getDocId" placeholder="e.g., garment1" />
+          <h3 class="subtitulos">Serch for iteam</h3>
+          <div class="input-container">
+            <h4>Garment ID:</h4>
+            <input type="text" id="getDocId" placeholder="e.g., garment1" />
+          </div>
+          <button id="getDocBtn">Get Clothing Item</button>
         </div>
-        <button id="getDocBtn">Get Clothing Item</button>
-      </div>
 
-      <!-- Lista de prendas -->
-      <div id="clothingList" class="login-container space1"
-        style="display: none; flex: 1; max-height: 80vh; overflow-y: auto;">
-        <h3>Listado de Prendas</h3>
+        <!-- Lista de prendas -->
+        <div id="clothingList" class="login-container space1"
+          style="display: none; flex: 1; max-height: 80vh; overflow-y: auto;">
+          <h3 class="subtitulos">List of Garments</h3>
+        </div>
       </div>
     </div>
+    
   </div>
 
   <script type="module">
@@ -85,7 +89,7 @@
       clothingListVisible = true;
       wasGetDocBtnClicked = false;
 
-      clothingList.innerHTML = "<h3>Listado de Prendas</h3>";
+      clothingList.innerHTML = "<h3 class='subtitulos'>List of Garments</h3>";
 
       try {
         const prendas = await ropaService.getAllDocuments();
@@ -94,7 +98,7 @@
           const item = document.createElement("div");
           item.style.border = "3px solid #79557d";
           item.style.padding = "15px";
-          item.style.margin = "10px 0";
+          item.style.margin = "5px 0";
           item.style.borderRadius = "5px";
           item.style.backgroundColor = "#fff";
 
@@ -161,8 +165,8 @@
           wasGetDocBtnClicked = true;
 
           clothingList.innerHTML = `
-            <h3>Listado de Prendas</h3>
-            <div style="border: 3px solid #79557d; padding: 15px; margin: 10px 0; border-radius: 5px; background-color: #fff;">
+            <h3 class="subtitulos">Garments selected</h3>
+            <div style="border: 3px solid #79557d; padding: 15px; margin: 5px 0; border-radius: 5px; background-color: #fff;">
               <h3>${item.name}</h3>
               <p><strong>Id:</strong> ${item.id || 'No id'}</p>
               <p><strong>Price:</strong> ${item.price || 'No price'}</p>

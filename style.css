@@ -8,6 +8,16 @@ body {
     font-family: 'Lato', sans-serif;
 }
 
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.square {
+    margin: 20px;
+}
+
 .background-container {
     position: relative;
     width: calc(100% - 100px);
@@ -16,8 +26,10 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* sombra suave y difusa */
-    border-radius: 40px; /* opcional para que la sombra se vea más estética */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    /* sombra suave y difusa */
+    border-radius: 40px;
+    /* opcional para que la sombra se vea más estética */
 }
 
 .background-container::before {
@@ -27,12 +39,15 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/img/fondo.jpg'); /* Ruta de la imagen */
+    background-image: url('/img/fondo.jpg');
+    /* Ruta de la imagen */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    filter: blur(10px); /* Aplica el desenfoque */
-    z-index: -1; /* Envía el fondo desenfocado detrás del contenido */
+    filter: blur(10px);
+    /* Aplica el desenfoque */
+    z-index: -1;
+    /* Envía el fondo desenfocado detrás del contenido */
     transform: scale(1.1);
 }
 
@@ -44,8 +59,10 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 255, 0.1); /* Azul con 80% de opacidad */
-    z-index: -1; /* Mantiene el filtro detrás del contenido */
+    background-color: rgba(0, 0, 255, 0.1);
+    /* Azul con 80% de opacidad */
+    z-index: -1;
+    /* Mantiene el filtro detrás del contenido */
 }
 
 
@@ -61,7 +78,9 @@ body {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 400px;
-    margin-top: 10px; /* Margen para separación del título */
+    margin-top: 10px;
+    margin: 20px;
+    /* Margen para separación del título */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -106,9 +125,24 @@ body {
     background-color: rgb(43, 5, 46);
 }
 
-h1 {color: white; margin: 0; margin-top: 30px;}
-.space {margin-top: 30px;}
-.space1 {margin-bottom: 30px;}
+h1 {
+    color: white;
+    margin: 0;
+    margin-top: 30px;
+}
+
+.subtitulos {
+    color: white;
+}
+
+
+.space {
+    margin-top: 30px;
+}
+
+.space1 {
+    margin-bottom: 30px;
+}
 
 .overlay {
     position: absolute;
@@ -116,6 +150,8 @@ h1 {color: white; margin: 0; margin-top: 30px;}
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Color negro con 50% de opacidad */
-    z-index: 1; /* Asegura que esté sobre el fondo pero detrás del contenido */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Color negro con 50% de opacidad */
+    z-index: 1;
+    /* Asegura que esté sobre el fondo pero detrás del contenido */
 }
